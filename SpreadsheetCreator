@@ -2,7 +2,7 @@ import pandas as pd
 import re
 import os
 
-def update_translation_spreadsheet_with_conflict_check(english_text, fl_text, output_file):
+def update_translation_spreadsheet(english_text, fl_text, output_file):
     # Remove punctuation and make everything lowercase
     english_text = re.sub(r'[^\w\s]', '', english_text).lower()
     fl_text = re.sub(r'[^\w\s]', '', fl_text).lower()
@@ -23,27 +23,6 @@ def update_translation_spreadsheet_with_conflict_check(english_text, fl_text, ou
     if os.path.exists(output_file):
         existing_df = pd.read_excel(output_file)
 
-        # Check for conflicts
-        for _, row in new_df.iterrows():
-            english_word = row['English']
-            fl_word = row['FL']
-
-            # Find any existing translations for the English word
-            existing_translations = existing_df[existing_df['English'] == english_word]
-
-            # If there are existing translations, check if they conflict
-            if not existing_translations.empty:
-                for _, existing_row in existing_translations.iterrows():
-                    existing_fl_word = existing_row['FL']
-                    if existing_fl_word != fl_word:
-                        # Conflict found
-                        print(f"Conflict detected: '{english_word}' is already translated as '{existing_fl_word}', but the new translation is '{fl_word}'.")
-                        user_input = input("Do you want to proceed with the new translation? (yes/no): ")
-                        if user_input.lower() != 'yes':
-                            # Skip this conflicting pair
-                            new_df = new_df[new_df['English'] != english_word]
-                            break
-
         # Concatenate the existing DataFrame with the new one
         combined_df = pd.concat([existing_df, new_df])
 
@@ -52,6 +31,16 @@ def update_translation_spreadsheet_with_conflict_check(english_text, fl_text, ou
 
     # Remove duplicate pairs and reset index
     combined_df = combined_df.drop_duplicates().reset_index(drop=True)
+
+    # Check for "overbooked" words (English words with multiple FL translations)
+    overbooked = combined_df.groupby('English')['FL'].nunique()
+    overbooked = overbooked[overbooked > 1]
+
+    if not overbooked.empty:
+        print("Overbooking detected for the following words (having multiple translations):")
+        for english_word in overbooked.index:
+            translations = combined_df[combined_df['English'] == english_word]['FL'].unique()
+            print(f"'{english_word}': {translations}")
 
     # Save the updated DataFrame to an Excel file
     combined_df.to_excel(output_file, index=False)
@@ -62,4 +51,4 @@ english_text = "The computer model called World3, developed for the LTG study, s
 fl_text = "Fad ikaik tød neritt NodeSpacesGC, ingamitt ti fad FL soddry, eråekitt inin enafa geru beni ader fad etat påes nayn fad desomed neding: edieåijk, foreru gere, deligekijk, yriona eli, beni gen eder liadenen. Ti enuli esom, NodeSpacesGC ter enera meb, ti isen eraelonende fad rosen desomed edieåijk inedie ak ogeri tare tingik anot."
 output_file = 'AYLID.xlsx'
 
-create_translation_spreadsheet(english_text, fl_text, output_file)
+update_translation_spreadsheet(english_text, fl_text, output_file)
