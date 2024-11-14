@@ -8,7 +8,7 @@ import pandas as pd
 import re
 import os
 
-def update_translation_spreadsheet_with_conflict_check(english_text, fl_text, output_file):
+def update_translation_spreadsheet(english_text, fl_text, output_file):
     # Remove punctuation and make everything lowercase
     english_text = re.sub(r'[^\w\s]', '', english_text).lower()
     fl_text = re.sub(r'[^\w\s]', '', fl_text).lower()
@@ -57,7 +57,7 @@ english_text = "The computer model called World3, developed for the LTG study, s
 fl_text = "Fad ikaik tød neritt NodeSpacesGC, ingamitt ti fad FL soddry, eråekitt inin enafa geru beni ader fad etat påes nayn fad desomed neding: edieåijk, foreru gere, deligekijk, yriona eli, beni gen eder liadenen. Ti enuli esom, NodeSpacesGC ter enera meb, ti isen eraelonende fad rosen desomed edieåijk inedie ak ogeri tare tingik anot."
 output_file = 'AYLID.xlsx'
 
-update_translation_spreadsheet_with_conflict_check(english_text, fl_text, output_file)
+update_translation_spreadsheet(english_text, fl_text, output_file)
 
 
 # In[ ]:
