@@ -1,8 +1,12 @@
 import pandas as pd
 import re
+import os
 
 def load_translation_dictionary(excel_file):
     """Load the Excel file and create bidirectional translation dictionaries"""
+    if not os.path.exists(excel_file):
+        raise FileNotFoundError(f"Translation dictionary file not found: {excel_file}")
+        
     df = pd.read_excel(excel_file)
     
     # Initialize dictionaries
@@ -29,16 +33,20 @@ def load_translation_dictionary(excel_file):
     
     return eng_to_fl, fl_to_eng
 
-def translate_text(text, direction='eng_to_fl', dictionary_file='translation_master.xlsx', mark_unknown=True):
+def translate_text(text, dictionary_file, direction='eng_to_fl', mark_unknown=True):
     """
     Translate text between English and FL
     
     Parameters:
     - text: Input text to translate
+    - dictionary_file: Path to Excel file containing translations (required)
     - direction: 'eng_to_fl' or 'fl_to_eng'
-    - dictionary_file: Excel file containing translations
     - mark_unknown: If True, marks unknown words with brackets; if False, leaves them unchanged
     """
+    # Validate direction
+    if direction not in ['eng_to_fl', 'fl_to_eng']:
+        raise ValueError("Direction must be either 'eng_to_fl' or 'fl_to_eng'")
+    
     # Load dictionaries
     eng_to_fl, fl_to_eng = load_translation_dictionary(dictionary_file)
     
@@ -90,16 +98,28 @@ def print_translation_result(result):
         print(", ".join(result['unknown_words']))
 
 if __name__ == "__main__":
+    # Get dictionary file path from user
+    dictionary_file = input("Enter the path to your translation dictionary Excel file: ")
+    
     # Example translations
-    english_text = "The laser requires an output power many orders of magnitude higher"
-    fl_text = "fad aynona riga yron yrisyr gwang asie drylø"
+    english_text = input("\nEnter text to translate: ")
+    direction = input("Enter translation direction (eng_to_fl/fl_to_eng): ").lower()
+    mark_unknown = input("Mark unknown words? (yes/no): ").lower() == 'yes'
     
-    # Example with marked unknown words
-    print("\nEnglish to FL (marking unknown words):")
-    result = translate_text(english_text, 'eng_to_fl', mark_unknown=True)
-    print_translation_result(result)
-    
-    # Example preserving unknown words
-    print("\nFL to English (preserving unknown words):")
-    result = translate_text(fl_text, 'fl_to_eng', mark_unknown=False)
-    print_translation_result(result)
+    try:
+        result = translate_text(english_text, 
+                              dictionary_file=dictionary_file,
+                              direction=direction,
+                              mark_unknown=mark_unknown)
+        print_translation_result(result)
+    except Exception as e:
+        print(f"\nError: {str(e)}")
+
+# Example usage
+dictionary_file = "path/to/your/dictionary.xlsx"
+text = "The laser requires power"
+result = translate_text(text, 
+                       dictionary_file=dictionary_file,
+                       direction='eng_to_fl',
+                       mark_unknown=True)
+print_translation_result(result)
