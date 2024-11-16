@@ -1,0 +1,4 @@
+pandas
+numpy
+tensorflow
+openpyxl  # This is needed for reading/writing Excel files (used by pandas)
