@@ -1,0 +1,14 @@
+# Ignore model files
+*.h5
+*.pickle
+
+# Ignore Jupyter notebook checkpoints
+__pycache__/
+.ipynb_checkpoints/
+
+# Ignore OS-generated files
+.DS_Store
+
+# Ignore virtual environment folders
+venv/
+.env/
