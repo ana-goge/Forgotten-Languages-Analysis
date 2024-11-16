@@ -16,3 +16,4 @@ This repository is dedicated to exploring and analyzing the FL languages and con
 - Developing collaborative features to expand and share translation progress.
 - Improving the machine learning model with expanded datasets to increase accuracy.
 - Creating notebooks to provide interactive tutorials and demonstrations.
+- Transitioning from word-level pairs to sentence-level data and utilizing seq2seq models with attention mechanisms to improve translation quality and contextual accuracy.
