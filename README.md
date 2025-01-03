@@ -6,7 +6,7 @@ This repository is dedicated to exploring and analyzing the Forgotten Languages 
   
 **Contents**
 
-- **NEW** StreamlitApp: A Streamlit app for searching and viewing articles from the FL database. This app provides a user-friendly interface to query the database by keyword and date range, with the ability to search through different fields like Title, Author, Tags, and Full Text. https://forgotten-languages-search.streamlit.app/#forgotten-languages-database-search-tool
+- **NEW** StreamlitApp: A Streamlit app for searching and viewing articles from the FL database. This app provides a user-friendly interface to query the database by keyword and date range, with the ability to search through different fields like Title, Author, Tags, and Full Text. (https://forgotten-languages-search.streamlit.app/)
 - `FLSpreadsheetCreator.py`: Script for creating and updating translation spreadsheets.
 - `FLTranslator.py`: Script for translating new text using the spreadsheet as a language dictionary.
 - `FLTranslationML.py`: Machine learning script for training an AI model to translate an FL language to English.
