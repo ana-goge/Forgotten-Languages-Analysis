@@ -120,32 +120,39 @@ elif search_type == "Date Range":
     else:
         st.write("Please select both start and end dates.")
 
-# General Keyword Search Option
+# General Keyword Search Option with Toggle for Fields
 elif search_type == "General Keyword":
-    keyword = st.text_input("Enter a general keyword to search in title, author, tags, and full text:")
+    keyword = st.text_input("Enter a general keyword to search in selected fields:")
     st.write(f"Debug: User entered keyword '{keyword}'")  # Debugging input
 
-    search_all_fields = st.checkbox("Search all fields (Title, Author, Tags, Full Text)", value=True)  # Default is True (checked)
+    # Allow the user to choose which fields to search
+    fields_to_search = st.multiselect(
+        "Select fields to search:",
+        ["title", "author", "tags", "full_text", "english_text"],
+        default=["title", "author", "tags", "full_text", "english_text"]  # Default is all fields selected
+    )
 
     if keyword.strip():
         with sqlite3.connect(DB_FILE) as conn:
             try:
-                if search_all_fields:
-                    # Search all three fields (title, author, full_text)
-                    query = """
-                        SELECT title, author, date_posted, tags, url, full_text
-                        FROM posts
-                        WHERE title LIKE ? OR author LIKE ? OR tags LIKE ? OR full_text LIKE ?
-                    """
-                    df = pd.read_sql_query(query, conn, params=(f"%{keyword}%", f"%{keyword}%", f"%{keyword}%", f"%{keyword}%"))
-                else:
-                    # Only search the full_text column
-                    query = """
-                        SELECT title, author, date_posted, tags, url, full_text
-                        FROM posts
-                        WHERE full_text LIKE ?
-                    """
-                    df = pd.read_sql_query(query, conn, params=(f"%{keyword}%",))
+                # Build the query dynamically based on selected fields
+                query = """
+                    SELECT title, author, date_posted, tags, url, full_text, english_text
+                    FROM posts
+                    WHERE """
+                
+                # Add the selected fields to the query
+                conditions = []
+                params = []
+                for field in fields_to_search:
+                    conditions.append(f"{field} LIKE ?")
+                    params.append(f"%{keyword}%")
+                
+                # Join the conditions with "OR"
+                query += " OR ".join(conditions)
+
+                # Execute the query
+                df = pd.read_sql_query(query, conn, params=params)
 
                 if df.empty:
                     st.write(f"No results found for the keyword '{keyword}'.")
