@@ -56,7 +56,6 @@ if search_type == "Date Range":
 # General Keyword Search Option with Toggle for Fields
 elif search_type == "Keyword":
     keyword = st.text_input("Enter a general keyword to search in selected fields:", placeholder="Enter keyword here")
-    st.write(f"Debug: User entered keyword '{keyword}'")  # Debugging input
 
     # Allow the user to choose which fields to search
     fields_to_search = st.radio(
