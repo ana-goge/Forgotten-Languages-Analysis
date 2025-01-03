@@ -19,7 +19,21 @@ DB_FILE = "newdb.db"
 
 # Streamlit app layout
 st.title("Forgotten Languages Database Search Tool")
-st.write("Use this tool to search for articles based on different criteria. Select a search type and enter the relevant keyword.")
+st.write("""
+Welcome to the **Forgotten Languages Database Search Tool**
+
+This tool allows you to search for articles in the database using two main criteria:
+
+1. **Keyword Search**: Enter a keyword or phrase and choose which fields to search (Title, Author, Tags, Full Text).
+2. **Date Range Search**: Filter articles by selecting a start and end date.
+
+### How to Use:
+1. **Select the search type**: Choose **Keyword** or **Date Range**.
+2. **For Keyword Search**: Enter a keyword and select the fields to search.
+3. **For Date Range Search**: Set the start and end dates to find articles posted within that range.
+
+Once you’ve set your criteria, click **Search** to view the results. If no results are found, try adjusting your search.
+""")
 
 # Search options (removed Full Text and English Text options)
 search_type = st.selectbox("Search by:", ["Keyword", "Date Range"])
