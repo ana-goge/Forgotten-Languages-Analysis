@@ -21,7 +21,7 @@ DB_FILE = "newdb.db"
 st.title("Forgotten Languages Database Search Tool")
 
 # Search options
-search_type = st.selectbox("Search by:", ["Title", "Author", "Tags", "Date Range", "English Text", "Full Text"])
+search_type = st.selectbox("Search by:", ["General Keyword", "Title", "Author", "Tags", "Date Range", "English Text", "Full Text"])
 
 if search_type == "Title":
     title = st.text_input("Enter a title or keyword:")
@@ -162,5 +162,27 @@ elif search_type == "Full Text":
     else:
         st.write("Please enter a valid keyword.")
 
+elif search_type == "General Keyword":
+    keyword = st.text_input("Enter a general keyword to search in title, author, and full text:")
+    st.write(f"Debug: User entered keyword '{keyword}'")  # Debugging input
+
+    if keyword.strip():
+        with sqlite3.connect(DB_FILE) as conn:
+            try:
+                query = """
+                    SELECT title, author, date_posted, tags, url, full_text
+                    FROM posts
+                    WHERE title LIKE ? OR author LIKE ? OR full_text LIKE ?
+                """
+                # The same keyword will be searched in title, author, and full_text
+                df = pd.read_sql_query(query, conn, params=(f"%{keyword}%", f"%{keyword}%", f"%{keyword}%"))
+                if df.empty:
+                    st.write(f"No results found for the keyword '{keyword}'.")
+                else:
+                    st.write(df)
+            except Exception as e:
+                st.write(f"Error: {e}")  # Display the error for further debugging
+    else:
+        st.write("Please enter a valid keyword.")
 
 st.write("Powered by Streamlit")
