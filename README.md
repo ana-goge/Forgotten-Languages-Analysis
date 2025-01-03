@@ -16,8 +16,7 @@ This repository is dedicated to exploring and analysing the Forgotten Languages 
 
 **FL Database** 
 
-The FL database contains articles, metadata (author, tags, publication date), and full texts of FL content. The database is continuously updated and serves as the core resource for training machine learning models and performing in-depth analysis of FL languages.
-Database Fields:
+The FL database contains articles, metadata (author, tags, publication date), and full texts of FL content. The database is continuously updated and serves as the core resource for training machine learning models and performing in-depth analysis of FL languages. **Database Fields:**
 - title: Title of the article
 - author: Author of the article
 - date_posted: Date the article was posted
@@ -27,7 +26,7 @@ Database Fields:
   
 **Future Plans**
 
-- **Training an LLM on the FL Database:** A significant upcoming feature is the training of a Large Language Model (LLM) on the FL database for analysis. This model will be used to extract insights, analyze patterns, and possibly generate new translations.
+- **Training an LLM on the FL Database:** A significant upcoming feature is the training of a Large Language Model (LLM) on the FL database for analysis. This model will be used to extract insights, analyse patterns, and possibly generate new translations.
 - **Improving Translation Quality:** We will continue transitioning from word-level pairs to sentence-level data and incorporating seq2seq models with attention mechanisms to improve translation accuracy and contextual understanding.
 - **Pattern Analysis Tools:** Adding more tools to facilitate pattern analysis and machine learning exploration of FL content, including word frequency analysis, sentence structures, and grammatical patterns.
 - **Collaborative Features:** Developing features to expand and share translation progress, including collaborative workflows and data sharing.
