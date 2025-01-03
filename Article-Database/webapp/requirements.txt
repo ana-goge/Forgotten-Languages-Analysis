@@ -1,3 +1,2 @@
 streamlit
-sqlite3
 pandas
