@@ -128,8 +128,8 @@ elif search_type == "General Keyword":
     # Allow the user to choose which fields to search
     fields_to_search = st.multiselect(
         "Select fields to search:",
-        ["title", "author", "tags", "full_text", "english_text"],
-        default=["title", "author", "tags", "full_text", "english_text"]  # Default is all fields selected
+        ["title", "author", "tags", "full_text"],
+        default=["title", "author", "tags", "full_text"]  # Default is all fields selected
     )
 
     if keyword.strip():
@@ -137,7 +137,7 @@ elif search_type == "General Keyword":
             try:
                 # Build the query dynamically based on selected fields
                 query = """
-                    SELECT title, author, date_posted, tags, url, full_text, english_text
+                    SELECT title, author, date_posted, tags, url, full_text
                     FROM posts
                     WHERE """
                 
