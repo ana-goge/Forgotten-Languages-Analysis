@@ -79,7 +79,7 @@ elif search_type == "Keyword":
                             "title LIKE ?",
                             "author LIKE ?",
                             "tags LIKE ?",
-                            "full_text LIKE ?"
+                            "`full_text` LIKE ?"  # Corrected full_text reference with backticks
                         ]
                         params = [f"%{keyword}%"] * 4
                     else:
