@@ -60,7 +60,7 @@ elif search_type == "Keyword":
     # Allow the user to choose which fields to search
     fields_to_search = st.radio(
         "Select fields to search:",
-        options=["All fields (Title, Author, Tags, Full Text)", "Title", "Author", "Tags", "Full Text"],
+        options=["All fields (Title, Author, Tags, English Text)", "Title", "Author", "Tags", "English Text"],
         index=0  # Default is 'All fields'
     )
 
@@ -70,16 +70,16 @@ elif search_type == "Keyword":
                 try:
                     # Dynamically build the query based on selected fields
                     query = """
-                        SELECT title, author, date_posted, tags, url, `full_text`
+                        SELECT title, author, date_posted, tags, url, english_text
                         FROM posts
                         WHERE """
                     
-                    if fields_to_search == "All fields (Title, Author, Tags, Full Text)":
+                    if fields_to_search == "All fields (Title, Author, Tags, English Text)":
                         conditions = [
                             "title LIKE ?",
                             "author LIKE ?",
                             "tags LIKE ?",
-                            "`full_text` LIKE ?"
+                            "english_text LIKE ?"
                         ]
                         params = [f"%{keyword}%"] * 4
                     else:
