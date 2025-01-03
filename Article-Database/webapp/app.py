@@ -30,39 +30,78 @@ search_type = st.selectbox("Search by:", ["Title", "Author", "Tags", "Date Range
 
 if search_type == "Title":
     title = st.text_input("Enter a title or keyword:")
-    if title:
+    if title.strip():  # Ensure input is not empty or just whitespace
         results = query_database(
-            "SELECT title, author, date_posted, tags FROM posts WHERE title LIKE ?",
+            """
+            SELECT title, author, date_posted, tags 
+            FROM posts 
+            WHERE title LIKE ?
+            """,
             (f"%{title}%",)
         )
-        st.write(results)
+        if not results.empty:
+            st.write(results)
+        else:
+            st.write(f"No results found for the title or keyword '{title}'.")
+    else:
+        st.write("Please enter a valid title or keyword.")
 
 elif search_type == "Author":
     author = st.text_input("Enter an author's name:")
-    if author:
+    if author.strip():  # Ensure input is not empty or just whitespace
         results = query_database(
-            "SELECT title, author, date_posted, tags FROM posts WHERE author LIKE ?",
+            """
+            SELECT title, author, date_posted, tags 
+            FROM posts 
+            WHERE author LIKE ?
+            """,
             (f"%{author}%",)
         )
-        st.write(results)
+        if not results.empty:
+            st.write(results)
+        else:
+            st.write(f"No results found for the author '{author}'.")
+    else:
+        st.write("Please enter a valid author's name.")
 
 elif search_type == "Tags":
     tag = st.text_input("Enter a tag:")
-    if tag:
+    if tag.strip():  # Ensure input is not empty or just whitespace
         results = query_database(
-            "SELECT title, author, date_posted, tags FROM posts WHERE tags LIKE ?",
+            """
+            SELECT title, author, date_posted, tags 
+            FROM posts 
+            WHERE tags LIKE ?
+            """,
             (f"%{tag}%",)
         )
-        st.write(results)
+        if not results.empty:
+            st.write(results)
+        else:
+            st.write(f"No results found for the tag '{tag}'.")
+    else:
+        st.write("Please enter a valid tag.")
 
 elif search_type == "Date Range":
     start_date = st.date_input("Start Date")
     end_date = st.date_input("End Date")
     if start_date and end_date:
-        results = query_database(
-            "SELECT title, author, date_posted, tags FROM posts WHERE date_posted BETWEEN ? AND ?",
-            (start_date, end_date)
-        )
-        st.write(results)
+        if start_date > end_date:
+            st.write("Error: Start date must be before end date.")
+        else:
+            results = query_database(
+                """
+                SELECT title, author, date_posted, tags 
+                FROM posts 
+                WHERE date_posted BETWEEN ? AND ?
+                """,
+                (start_date, end_date)
+            )
+            if not results.empty:
+                st.write(results)
+            else:
+                st.write(f"No results found between {start_date} and {end_date}.")
+    else:
+        st.write("Please select both start and end dates.")
 
 st.write("Powered by Streamlit")
