@@ -38,6 +38,8 @@ if __name__ == "__main__":
 
     query_type = input("Enter the type of search (title/author/tags/date_range): ").strip().lower()
 
+    results = []  # Define results here to avoid NameError later
+
     if query_type in ["title", "author", "tags"]:
         query_value = input(f"Enter a keyword to search by {query_type}: ").strip()
         results = search_posts(query_type, query_value=query_value)
@@ -56,8 +58,7 @@ if __name__ == "__main__":
         results = search_posts(query_type, start_date=start_date, end_date=end_date)
     else:
         print("Invalid search type. Please choose from title, author, tags, or date_range.")
-        exit()
-
+    
     # Display results
     if results:
         print(f"\nFound {len(results)} result(s):\n")
