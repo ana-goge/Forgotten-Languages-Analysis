@@ -32,7 +32,7 @@ if search_type == "Title":
         with sqlite3.connect(DB_FILE) as conn:
             try:
                 query = """
-                    SELECT title, author, date_posted, tags 
+                    SELECT title, author, date_posted, tags, url 
                     FROM posts 
                     WHERE title LIKE ?
                 """
@@ -55,7 +55,7 @@ elif search_type == "Author":
         with sqlite3.connect(DB_FILE) as conn:
             try:
                 query = """
-                    SELECT title, author, date_posted, tags 
+                    SELECT title, author, date_posted, tags, url 
                     FROM posts 
                     WHERE author = ?
                 """
@@ -78,7 +78,7 @@ elif search_type == "Tags":
         with sqlite3.connect(DB_FILE) as conn:
             try:
                 query = """
-                    SELECT title, author, date_posted, tags 
+                    SELECT title, author, date_posted, tags, url 
                     FROM posts 
                     WHERE tags LIKE ?
                 """
@@ -105,7 +105,7 @@ elif search_type == "Date Range":
             
             results = query_database(
                 """
-                SELECT title, author, date_posted, tags 
+                SELECT title, author, date_posted, tags, url 
                 FROM posts 
                 WHERE date_posted_formatted BETWEEN ? AND ?
                 """,
