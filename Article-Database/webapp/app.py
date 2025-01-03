@@ -48,14 +48,15 @@ if search_type == "Title":
 
 elif search_type == "Author":
     author = st.text_input("Enter an author's name:")
+    st.write(f"Debug: User entered author '{author}'")  # Print the input for debugging
     if author.strip():  # Ensure input is not empty or just whitespace
         results = query_database(
             """
             SELECT title, author, date_posted, tags 
             FROM posts 
-            WHERE author LIKE ?
+            WHERE author = ?
             """,
-            (f"%{author}%",)
+            (author,)  # Ensure this matches the input correctly
         )
         if not results.empty:
             st.write(results)
