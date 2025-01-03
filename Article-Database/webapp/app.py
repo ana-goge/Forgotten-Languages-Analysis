@@ -70,7 +70,7 @@ elif search_type == "Keyword":
                 try:
                     # Dynamically build the query based on selected fields
                     query = """
-                        SELECT title, author, date_posted, tags, url, full_text
+                        SELECT title, author, date_posted, tags, url, `full_text`
                         FROM posts
                         WHERE """
                     
@@ -79,7 +79,7 @@ elif search_type == "Keyword":
                             "title LIKE ?",
                             "author LIKE ?",
                             "tags LIKE ?",
-                            "`full_text` LIKE ?"  # Corrected full_text reference with backticks
+                            "`full_text` LIKE ?"
                         ]
                         params = [f"%{keyword}%"] * 4
                     else:
