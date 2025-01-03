@@ -60,7 +60,7 @@ elif search_type == "Keyword":
     # Allow the user to choose which fields to search
     fields_to_search = st.radio(
         "Select fields to search:",
-        options=["All fields (Title, Author, Tags, English Text)", "Title", "Author", "Tags", "English Text"],
+        options=["All fields (Title, Author, Tags, Full Text)", "Title", "Author", "Tags", "Full Text"],
         index=0  # Default is 'All fields'
     )
 
@@ -70,22 +70,36 @@ elif search_type == "Keyword":
                 try:
                     # Dynamically build the query based on selected fields
                     query = """
-                        SELECT title, author, date_posted, tags, url, english_text
+                        SELECT title, author, date_posted, tags, url, full_text
                         FROM posts
                         WHERE """
                     
-                    if fields_to_search == "All fields (Title, Author, Tags, English Text)":
-                        conditions = [
+                    conditions = []
+                    params = []
+
+                    # If searching for all fields
+                    if fields_to_search == "All fields (Title, Author, Tags, Full Text)":
+                        conditions += [
                             "title LIKE ?",
                             "author LIKE ?",
-                            "tags LIKE ?",
-                            "english_text LIKE ?"
+                            "tags LIKE ?"
                         ]
-                        params = [f"%{keyword}%"] * 4
-                    else:
-                        conditions = [f"{fields_to_search.lower()} LIKE ?"]
-                        params = [f"%{keyword}%"]
+                        params += [f"%{keyword}%"] * 3
 
+                        # Handle full_text separately to avoid issues with SQL syntax
+                        conditions.append("full_text LIKE ?")
+                        params.append(f"%{keyword}%")
+
+                    # If searching in a specific field (title, author, tags, full_text)
+                    else:
+                        if fields_to_search == "Full Text":
+                            conditions.append("full_text LIKE ?")
+                            params.append(f"%{keyword}%")
+                        else:
+                            conditions.append(f"{fields_to_search.lower()} LIKE ?")
+                            params.append(f"%{keyword}%")
+
+                    # Combine all conditions with "OR"
                     query += " OR ".join(conditions)
 
                     # Execute the query
@@ -95,6 +109,7 @@ elif search_type == "Keyword":
                         st.write(f"No results found for the keyword '{keyword}'.")
                     else:
                         st.write(df)
+
                 except Exception as e:
                     st.write(f"Error: {e}")  # Display the error for further debugging
     else:
