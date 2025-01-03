@@ -49,19 +49,23 @@ if search_type == "Title":
 elif search_type == "Author":
     author = st.text_input("Enter an author's name:")
     st.write(f"Debug: User entered author '{author}'")  # Print the input for debugging
-    if author.strip():  # Ensure input is not empty or just whitespace
-        results = query_database(
-            """
-            SELECT title, author, date_posted, tags 
-            FROM posts 
-            WHERE author = ?
-            """,
-            (author,)  # Ensure this matches the input correctly
-        )
-        if not results.empty:
-            st.write(results)
-        else:
-            st.write(f"No results found for the author '{author}'.")
+
+    if author.strip():
+        # Test the query in isolation
+        with sqlite3.connect(DB_FILE) as conn:
+            try:
+                query = """
+                    SELECT title, author, date_posted, tags 
+                    FROM posts 
+                    WHERE author = ?
+                """
+                df = pd.read_sql_query(query, conn, params=(author,))
+                if df.empty:
+                    st.write(f"No results found for author '{author}'.")
+                else:
+                    st.write(df)
+            except Exception as e:
+                st.write(f"Error: {e}")  # Display the error for further debugging
     else:
         st.write("Please enter a valid author's name.")
 
