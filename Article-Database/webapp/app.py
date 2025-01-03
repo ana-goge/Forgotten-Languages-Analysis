@@ -140,7 +140,7 @@ elif search_type == "English Text":
     else:
         st.write("Please enter a valid keyword.")
 
-elif search_type == "Full Text"
+elif search_type == "Full Text":
     keyword = st.text_input("Enter any keyword to search in the article text:")
     st.write(f"Debug: User entered keyword '{keyword}'")
 
