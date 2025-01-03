@@ -95,8 +95,6 @@ elif search_type == "Tags":
 elif search_type == "Date Range":
     start_date = st.date_input("Start Date")
     end_date = st.date_input("End Date")
-    st.write(f"Debug: User entered start date '{start_date}' and end date '{end_date}'")  # Debugging input
-
     if start_date and end_date:
         if start_date > end_date:
             st.write("Error: Start date must be before end date.")
@@ -105,21 +103,18 @@ elif search_type == "Date Range":
             start_date_str = start_date.strftime("%Y-%m-%d")
             end_date_str = end_date.strftime("%Y-%m-%d")
             
-            # Test the query in isolation
-            with sqlite3.connect(DB_FILE) as conn:
-                try:
-                    query = """
-                        SELECT title, author, date_posted, tags 
-                        FROM posts 
-                        WHERE date_posted BETWEEN ? AND ?
-                    """
-                    df = pd.read_sql_query(query, conn, params=(start_date_str, end_date_str))
-                    if df.empty:
-                        st.write(f"No results found between {start_date_str} and {end_date_str}.")
-                    else:
-                        st.write(df)
-                except Exception as e:
-                    st.write(f"Error: {e}")  # Display the error for further debugging
+            results = query_database(
+                """
+                SELECT title, author, date_posted, tags 
+                FROM posts 
+                WHERE date_posted_formatted BETWEEN ? AND ?
+                """,
+                (start_date_str, end_date_str)
+            )
+            if not results.empty:
+                st.write(results)
+            else:
+                st.write(f"No results found between {start_date_str} and {end_date_str}.")
     else:
         st.write("Please select both start and end dates.")
 
