@@ -19,12 +19,13 @@ DB_FILE = "newdb.db"
 
 # Streamlit app layout
 st.title("Forgotten Languages Database Search Tool")
+st.write("Use this tool to search for articles based on different criteria. Select a search type and enter the relevant keyword.")
 
 # Search options (removed Full Text and English Text options)
 search_type = st.selectbox("Search by:", ["General Keyword", "Title", "Author", "Tags", "Date Range"])
 
 if search_type == "Title":
-    title = st.text_input("Enter a title or keyword:")
+    title = st.text_input("Enter a title or keyword:", placeholder="e.g., Ancient Civilizations")
     st.write(f"Debug: User entered title '{title}'")  # Debugging input
 
     if title.strip():
@@ -47,7 +48,7 @@ if search_type == "Title":
         st.write("Please enter a valid title or keyword.")
 
 elif search_type == "Author":
-    author = st.text_input("Enter an author's name:")
+    author = st.text_input("Enter an author's name:", placeholder="e.g., John Doe")
     st.write(f"Debug: User entered author '{author}'")  # Debugging input
 
     if author.strip():
@@ -70,7 +71,7 @@ elif search_type == "Author":
         st.write("Please enter a valid author's name.")
 
 elif search_type == "Tags":
-    tag = st.text_input("Enter a tag:")
+    tag = st.text_input("Enter a tag:", placeholder="e.g., Language")
     st.write(f"Debug: User entered tag '{tag}'")  # Debugging input
 
     if tag.strip():
@@ -122,33 +123,37 @@ elif search_type == "Date Range":
 
 # General Keyword Search Option with Toggle for Fields
 elif search_type == "General Keyword":
-    keyword = st.text_input("Enter a general keyword to search in selected fields:")
+    keyword = st.text_input("Enter a general keyword to search in selected fields:", placeholder="Enter keyword here")
     st.write(f"Debug: User entered keyword '{keyword}'")  # Debugging input
 
     # Allow the user to choose which fields to search
-    fields_to_search = st.multiselect(
+    fields_to_search = st.radio(
         "Select fields to search:",
-        ["title", "author", "tags", "full_text"],
-        default=["title", "author", "tags", "full_text"]  # Default is all fields selected
+        options=["All fields (Title, Author, Tags, Full Text)", "Title", "Author", "Tags", "Full Text"],
+        index=0  # Default is 'All fields'
     )
 
     if keyword.strip():
         with sqlite3.connect(DB_FILE) as conn:
             try:
-                # Build the query dynamically based on selected fields
+                # Dynamically build the query based on selected fields
                 query = """
                     SELECT title, author, date_posted, tags, url, full_text
                     FROM posts
                     WHERE """
                 
-                # Add the selected fields to the query
-                conditions = []
-                params = []
-                for field in fields_to_search:
-                    conditions.append(f"{field} LIKE ?")
-                    params.append(f"%{keyword}%")
-                
-                # Join the conditions with "OR"
+                if fields_to_search == "All fields (Title, Author, Tags, Full Text)":
+                    conditions = [
+                        "title LIKE ?",
+                        "author LIKE ?",
+                        "tags LIKE ?",
+                        "full_text LIKE ?"
+                    ]
+                    params = [f"%{keyword}%"] * 4
+                else:
+                    conditions = [f"{fields_to_search.lower()} LIKE ?"]
+                    params = [f"%{keyword}%"]
+
                 query += " OR ".join(conditions)
 
                 # Execute the query
