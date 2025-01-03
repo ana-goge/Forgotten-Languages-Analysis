@@ -6,10 +6,10 @@ import gzip
 import shutil
 
 # Decompress the database file
-DB_COMPRESSED = "newdb.db.gz"
+DB_COMPRESSED = "./Article-Database/webapp/newdb.db.gz"  
 DB_FILE = "newdb.db"
 
-if not os.path.exists(DB_FILE):  # Only decompress if not already decompressed
+if not os.path.exists(DB_FILE): 
     with gzip.open(DB_COMPRESSED, 'rb') as f_in:
         with open(DB_FILE, 'wb') as f_out:
             shutil.copyfileobj(f_in, f_out)
