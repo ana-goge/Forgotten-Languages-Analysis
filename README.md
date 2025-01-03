@@ -2,7 +2,7 @@
 
 **Overview**
 
-This repository is dedicated to exploring and analyzing the Forgotten Languages (FL) languages and content. It provides tools for translating FL languages, analyzing linguistic patterns, and training machine learning models to improve translation quality. The toolkit now includes a database of FL content that can be searched and analyzed using Streamlit and Python.
+This repository is dedicated to exploring and analysing the Forgotten Languages (FL) languages and content. It provides tools for translating FL languages, analysing linguistic patterns, and training machine learning models to improve translation quality. The toolkit now includes a database of FL content that can be searched and analysed using Streamlit and Python.
   
 **Contents**
 
