@@ -17,11 +17,6 @@ if not os.path.exists(DB_FILE):
 # Connect to the SQLite database
 DB_FILE = "newdb.db"
 
-def query_database(query, params=()):
-    """Execute a query and return results as a DataFrame."""
-    with sqlite3.connect(DB_FILE) as conn:
-        return pd.read_sql_query(query, conn, params)
-
 # Streamlit app layout
 st.title("Forgotten Languages Database Search Tool")
 
@@ -30,25 +25,30 @@ search_type = st.selectbox("Search by:", ["Title", "Author", "Tags", "Date Range
 
 if search_type == "Title":
     title = st.text_input("Enter a title or keyword:")
-    if title.strip():  # Ensure input is not empty or just whitespace
-        results = query_database(
-            """
-            SELECT title, author, date_posted, tags 
-            FROM posts 
-            WHERE title LIKE ?
-            """,
-            (f"%{title}%",)
-        )
-        if not results.empty:
-            st.write(results)
-        else:
-            st.write(f"No results found for the title or keyword '{title}'.")
+    st.write(f"Debug: User entered title '{title}'")  # Debugging input
+
+    if title.strip():
+        # Test the query in isolation
+        with sqlite3.connect(DB_FILE) as conn:
+            try:
+                query = """
+                    SELECT title, author, date_posted, tags 
+                    FROM posts 
+                    WHERE title LIKE ?
+                """
+                df = pd.read_sql_query(query, conn, params=(f"%{title}%",))
+                if df.empty:
+                    st.write(f"No results found for the title or keyword '{title}'.")
+                else:
+                    st.write(df)
+            except Exception as e:
+                st.write(f"Error: {e}")  # Display the error for further debugging
     else:
         st.write("Please enter a valid title or keyword.")
 
 elif search_type == "Author":
     author = st.text_input("Enter an author's name:")
-    st.write(f"Debug: User entered author '{author}'")  # Print the input for debugging
+    st.write(f"Debug: User entered author '{author}'")  # Debugging input
 
     if author.strip():
         # Test the query in isolation
@@ -71,25 +71,32 @@ elif search_type == "Author":
 
 elif search_type == "Tags":
     tag = st.text_input("Enter a tag:")
-    if tag.strip():  # Ensure input is not empty or just whitespace
-        results = query_database(
-            """
-            SELECT title, author, date_posted, tags 
-            FROM posts 
-            WHERE tags LIKE ?
-            """,
-            (f"%{tag}%",)
-        )
-        if not results.empty:
-            st.write(results)
-        else:
-            st.write(f"No results found for the tag '{tag}'.")
+    st.write(f"Debug: User entered tag '{tag}'")  # Debugging input
+
+    if tag.strip():
+        # Test the query in isolation
+        with sqlite3.connect(DB_FILE) as conn:
+            try:
+                query = """
+                    SELECT title, author, date_posted, tags 
+                    FROM posts 
+                    WHERE tags LIKE ?
+                """
+                df = pd.read_sql_query(query, conn, params=(f"%{tag}%",))
+                if df.empty:
+                    st.write(f"No results found for the tag '{tag}'.")
+                else:
+                    st.write(df)
+            except Exception as e:
+                st.write(f"Error: {e}")  # Display the error for further debugging
     else:
         st.write("Please enter a valid tag.")
 
 elif search_type == "Date Range":
     start_date = st.date_input("Start Date")
     end_date = st.date_input("End Date")
+    st.write(f"Debug: User entered start date '{start_date}' and end date '{end_date}'")  # Debugging input
+
     if start_date and end_date:
         if start_date > end_date:
             st.write("Error: Start date must be before end date.")
@@ -98,18 +105,21 @@ elif search_type == "Date Range":
             start_date_str = start_date.strftime("%Y-%m-%d")
             end_date_str = end_date.strftime("%Y-%m-%d")
             
-            results = query_database(
-                """
-                SELECT title, author, date_posted, tags 
-                FROM posts 
-                WHERE date_posted BETWEEN ? AND ?
-                """,
-                (start_date_str, end_date_str)
-            )
-            if not results.empty:
-                st.write(results)
-            else:
-                st.write(f"No results found between {start_date_str} and {end_date_str}.")
+            # Test the query in isolation
+            with sqlite3.connect(DB_FILE) as conn:
+                try:
+                    query = """
+                        SELECT title, author, date_posted, tags 
+                        FROM posts 
+                        WHERE date_posted BETWEEN ? AND ?
+                    """
+                    df = pd.read_sql_query(query, conn, params=(start_date_str, end_date_str))
+                    if df.empty:
+                        st.write(f"No results found between {start_date_str} and {end_date_str}.")
+                    else:
+                        st.write(df)
+                except Exception as e:
+                    st.write(f"Error: {e}")  # Display the error for further debugging
     else:
         st.write("Please select both start and end dates.")
 
