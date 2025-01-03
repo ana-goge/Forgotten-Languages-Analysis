@@ -89,18 +89,22 @@ elif search_type == "Date Range":
         if start_date > end_date:
             st.write("Error: Start date must be before end date.")
         else:
+            # Convert dates to strings in the format YYYY-MM-DD
+            start_date_str = start_date.strftime("%Y-%m-%d")
+            end_date_str = end_date.strftime("%Y-%m-%d")
+            
             results = query_database(
                 """
                 SELECT title, author, date_posted, tags 
                 FROM posts 
                 WHERE date_posted BETWEEN ? AND ?
                 """,
-                (start_date, end_date)
+                (start_date_str, end_date_str)
             )
             if not results.empty:
                 st.write(results)
             else:
-                st.write(f"No results found between {start_date} and {end_date}.")
+                st.write(f"No results found between {start_date_str} and {end_date_str}.")
     else:
         st.write("Please select both start and end dates.")
 
