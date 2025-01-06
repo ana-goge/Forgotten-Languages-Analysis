@@ -20,12 +20,12 @@ This repository is dedicated to exploring and analyzing the Forgotten Languages 
 The FL database contains articles, metadata (author, tags, publication date), and full texts of FL content. The database is continuously updated and serves as the core resource for training machine learning models and performing in-depth analysis of FL languages.
 
 ### Database Fields:
-- **title**: Title of the article
-- **author**: Author of the article
-- **date_posted**: Date the article was posted
-- **tags**: Tags associated with the article
-- **english_text**: Isolated English portions of the article
-- **full_text**: The full text of the article
+- **`title`**: Title of the article
+- **`author`**: Author of the article
+- **`date_posted`**: Date the article was posted
+- **`tags`**: Tags associated with the article
+- **`english_text`**: Isolated English portions of the article
+- **`full_text`**: The full text of the article
 
 ---
 
